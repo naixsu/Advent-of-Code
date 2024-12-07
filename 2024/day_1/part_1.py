@@ -14,7 +14,7 @@ def read_from_file(file_name: str) -> tuple[list, list]:
 
 
 def get_total_distance() -> int:
-    file_name = "day_1/input.txt"
+    file_name = "input.txt"
     left, right = read_from_file(file_name)
 
     sum = 0

@@ -26,7 +26,7 @@ def is_safe(level: list[int]) -> bool:
 
 
 def get_safe_reports() -> int:
-    file_name = "day_2/input.txt"
+    file_name = "input.txt"
     levels = read_from_file(file_name)
     sum = 0
 
