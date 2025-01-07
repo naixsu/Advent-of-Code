@@ -3,7 +3,13 @@ import sys
 
 def create_day_files(day_number):
     directory = f"day_{day_number}"
-    os.makedirs(directory, exist_ok=True)
+
+    try:
+        os.makedirs(directory, exist_ok=False)
+    except FileExistsError:
+        print(f"Day {day_number} already exists.")
+        return
+
     template_file = "day_x.py"
 
     if not os.path.isfile(template_file):
