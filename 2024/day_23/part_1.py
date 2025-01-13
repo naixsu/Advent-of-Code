@@ -5,50 +5,30 @@ def read_from_file(file_name: str) -> str:
     return line
 
 
-def init_computers(lines: list[str]) -> set:
-    return set(lines)
-
-
 def get_connections(lines: list[str]) -> dict:
     connections = {}
 
     for line in lines:
         first, second = line.split("-")
-        connections.setdefault(first, set()).add(second)
-        connections.setdefault(second, set()).add(first)
+        connections.setdefault(first, []).append(second)
+        connections.setdefault(second, []).append(first)
 
     return connections
 
 
-def get_connected_computers(computers: set, connections: dict, starting_name: str) -> set:
+def get_connected_computers(connections: dict, starting_name: str) -> set:
     connected_computers = set()
 
-    for computer in computers:
-        first, second = computer.split("-")
+    for comp, cons in connections.items():
+        for i in range(len(cons) - 1):
+            for j in range(i + 1, len(cons)):
 
-        # Modifying `computers` while iterating might be bad but eh whatever
-        # We added it back in anyways. Should be fine I think. 
-        computers.remove(computer)
+                if cons[j] in connections[cons[i]] and comp in connections[cons[j]]:
+                    connection = sorted([comp, cons[i], cons[j]])
 
-        for comp in computers:
-            connected = False
-            l, r = comp.split("-")
-
-            connected = (
-                (l == first and r in connections[second]) or
-                (r == second and l in connections[first]) or
-                (l == second and r in connections[first]) or
-                (r == first and l in connections[second])
-            )
-
-            if connected:
-                connection = sorted({first, second, l, r})
-
-                if any(con.startswith(starting_name) for con in connection):
-                    connection = ",".join(connection)
-                    connected_computers.add(connection)
-
-        computers.add(computer)
+                    if any(con.startswith(starting_name) for con in connection):
+                        connection = ",".join(connection)
+                        connected_computers.add(connection)
 
     return connected_computers
 
@@ -58,9 +38,8 @@ def get_sum() -> int:
     lines = read_from_file(file_name).split("\n")
 
     starting_name = "t"
-    computers = init_computers(lines)
     connections = get_connections(lines)
-    connected_computers = get_connected_computers(computers, connections, starting_name)
+    connected_computers = get_connected_computers(connections, starting_name)
 
     total = len(connected_computers)
 
