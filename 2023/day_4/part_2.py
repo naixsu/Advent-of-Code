@@ -28,6 +28,25 @@ def get_sum() -> int:
         cards[i + 1] = count
 
     print(cards)
+    dupes = {}
+
+    # Card 1 has four matching numbers, so you win one copy each of the next four cards: cards 2, 3, 4, and 5.
+    # Your original card 2 has two matching numbers, so you win one copy each of cards 3 and 4.
+    # Your copy of card 2 also wins one copy each of cards 3 and 4.
+    # Your four instances of card 3 (one original and three copies) have two matching numbers, so you win four copies each of cards 4 and 5.
+    # Your eight instances of card 4 (one original and seven copies) have one matching number, so you win eight copies of card 5.
+    # Your fourteen instances of card 5 (one original and thirteen copies) have no matching numbers and win no more cards.
+    # Your one instance of card 6 (one original) has no matching numbers and wins no more cards.
+
+    # This needs more work
+
+    for key, val in cards.items():
+        for i in range(val):
+            print(i, key, i + key)
+            dupes[i + key + 1] = dupes.get(i + key + 1, 0) + 1
+
+
+    print(dupes)
 
     return total
 
