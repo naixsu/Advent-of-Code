@@ -16,60 +16,38 @@ def get_hand_bid(lines: list[str]) -> dict:
 
 
 def determine_card_type(hand: str) -> str:
-    """
-    Five of a kind: [5]
-    Four of a kind: [4, 1] or [1, 4]
-    Full house: [3, 2] or [2, 3]
-    Three of a kind: [3, 1, 1] or [1, 3, 1] or [1, 1, 3]
-    Two pair: [2, 2, 1] or [2, 1, 2] or [1, 2, 2]
-    One pair: [2, 1, 1, 1] or [1, 2, 1, 1] or [1, 1, 2, 1] or [1, 1, 1, 2]
-    High card: [1, 1, 1, 1, 1]
-    """
+    freq_map = {}
+    jokers = 0
 
-    types = {
-        "[5]": "Five",
-        "[1, 4]": "Four",
-        "[2, 3]": "Full",
-        "[1, 1, 3]": "Three",
-        "[1, 2, 2]": "Two",
-        "[1, 1, 1, 2]": "One",
-        "[1, 1, 1, 1, 1]": "High",
+    for card in hand:
+        if card == "J":
+            jokers += 1
+        else:
+            freq_map[card] = freq_map.get(card, 0) + 1
 
-    }
+    if not freq_map:
+        return "Five"  # All Jokers
 
-    counter = {}
+    freqs = sorted(freq_map.values(), reverse=True)
+    freqs[0] += jokers
+    freqs = sorted(freqs)
 
-    for char in hand:
-        counter[char] = counter.get(char, 0) + 1
-
-    freq = sorted(list(counter.values()))
-
-    return types[str(freq)]
-
-
-def determine_joker_type(hand: str, card_type: str):
-    types = {
-        "[5]": "Five",
-        "[1, 4]": "Four",
-        "[2, 3]": "Full",
-        "[1, 1, 3]": "Three",
-        "[1, 2, 2]": "Two",
-        "[1, 1, 1, 2]": "One",
-        "[1, 1, 1, 1, 1]": "High",
-
-    }
-
-    counter = {}
-    """
-    TODO:
-        Figure out how to pretend joker cards to determine
-        card type
-    """
-    for char in hand:
-        counter[char] = counter.get(char, 0) + 1
-
-
-    return "STR"
+    if freqs == [5]:
+        return "Five"
+    elif freqs == [1, 4]:
+        return "Four"
+    elif freqs == [2, 3]:
+        return "Full"
+    elif freqs == [1, 1, 3]:
+        return "Three"
+    elif freqs == [1, 2, 2]:
+        return "Two"
+    elif freqs == [1, 1, 1, 2]:
+        return "One"
+    elif freqs == [1, 1, 1, 1, 1]:
+        return "High"
+    else:
+        return "Unknown"
 
 
 def get_pairs(hand_bid: dict) -> dict:
@@ -79,11 +57,6 @@ def get_pairs(hand_bid: dict) -> dict:
 
     for hand in hands:
         card_type = determine_card_type(hand)
-
-        # print(hand, card_type)
-        if "J" in hand:
-            card_type = determine_joker_type(hand, card_type)
-
         pairs.setdefault(card_type, []).append(hand)
 
     return pairs
@@ -101,7 +74,7 @@ def determine_card_ranks(hands: list[str]) -> list[str]:
     order = {
         "A" : 14, "K": 13, "Q": 12, "J": 11,
         "T": 10, "9": 9, "8": 8, "7": 7, "6": 6,
-        "5": 5, "4": 4, "3": 3, "2": 2,
+        "5": 5, "4": 4, "3": 3, "2": 2, "J": 1
     }
 
     def card_strengths(hand: str):
@@ -144,9 +117,7 @@ def get_sum() -> int:
     hand_bid = get_hand_bid(lines)
     pairs = get_pairs(hand_bid)
 
-    # total = get_winnings(hand_bid, pairs)
-
-    total = 0
+    total = get_winnings(hand_bid, pairs)
 
     return total
 
