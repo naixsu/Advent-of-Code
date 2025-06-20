@@ -10,7 +10,7 @@ def get_sequences(lines: list[list[str]]) -> list[list[int]]:
 
     for line in lines:
         sequences.append(
-            list(map(int, line.split()))
+            list(map(int, line.split()))[::-1] # reverse the list
         )
 
     return sequences
