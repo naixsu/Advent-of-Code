@@ -25,7 +25,9 @@ def create_day_files(day_number):
     with open(os.path.join(directory, 'part_2.py'), 'w') as f:
         f.write(template_code)
 
-    print(f"Generated {directory} with part_1.py and part_2.py")
+    open(os.path.join(directory, 'input.txt'), 'w').close()
+
+    print(f"Generated {directory} with part_1.py, part_2.py, and input.txt")
 
 
 if len(sys.argv) != 2:
