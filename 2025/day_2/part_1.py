@@ -1,5 +1,3 @@
-import math
-
 def read_from_file(file_name: str) -> str:
     with open(file_name, "r") as file:
         line = file.read()
@@ -12,11 +10,11 @@ def get_ids(lines: list[str]) -> list[str]:
     return lines[0].split(",")
 
 
-def get_number_of_digits(num: int) -> int:
-    return int(math.log10(abs(num))) + 1
+def get_number_of_digits(num: str) -> int:
+    return len(num)
 
 
-def is_even_digits(num: int) -> bool:
+def is_even_digits(num: str) -> bool:
     return get_number_of_digits(num) % 2 == 0
 
 
@@ -37,7 +35,7 @@ def get_sum() -> int:
         first, last = id.split("-")
 
         for num in range(int(first), int(last) + 1):
-            if not is_even_digits(num):
+            if not is_even_digits(str(num)):
                 continue
 
             if is_invalid(str(num)):
