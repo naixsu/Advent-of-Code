@@ -1,3 +1,5 @@
+import math
+
 def read_from_file(file_name: str) -> str:
     with open(file_name, "r") as file:
         line = file.read()
@@ -15,10 +17,23 @@ def is_even_digits(num: str) -> bool:
 
 
 def is_invalid(num: str) -> bool:
-    length = len(num)
-    mid = length // 2
+    n = len(num)
 
-    return num[0:mid] == num[mid:length]
+    if n <= 1:
+        return False
+
+    for block_size in range(1, n // 2 + 1):
+        if n % block_size != 0:
+            continue
+
+        block = num[:block_size]
+        repeats = n // block_size
+
+        if block * repeats == num:
+            return True
+
+    return False
+
 
 def get_sum() -> int:
     file_name = "input.txt"
@@ -31,9 +46,6 @@ def get_sum() -> int:
         first, last = id.split("-")
 
         for num in range(int(first), int(last) + 1):
-            if not is_even_digits(str(num)):
-                continue
-
             if is_invalid(str(num)):
                 total += num
 
